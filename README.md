@@ -1,4 +1,4 @@
-# Bakery-ecommerce-UI
+# Bakery-ecommerce-UI - RaTi's Bakery
 Responsive bakery web platform built with HTML, CSS, and JavaScript featuring product catalog, interactive UI components, and scalable architecture for future e-commerce integration.
 # 🍰 Smart Bakery Web Platform
 
