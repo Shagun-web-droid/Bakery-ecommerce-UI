@@ -1,5 +1,9 @@
 # Bakery-ecommerce-UI - RaTi's Bakery
-Responsive bakery web platform built with HTML, CSS, and JavaScript featuring product catalog, interactive UI components, and scalable architecture for future e-commerce integration.
+A responsive bakery website interface designed using HTML, CSS, and JavaScript.
+The project presents a modern bakery brand named "Rati's Bakery", created as a frontend e-commerce concept with product display, responsive layout, and interactive UI components.
+
+About name : The bakery brand name used in this project is inspired by a personal nickname, adding a creative touch to the UI concept.
+
 # 🍰 Smart Bakery Web Platform
 
 A modern **responsive bakery website** built using **HTML, CSS, and JavaScript** that showcases bakery products through an interactive UI and optimized user experience.
