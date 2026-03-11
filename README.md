@@ -10,7 +10,7 @@ The project is designed with **scalable architecture** so it can later evolve in
 
 ## 🌐 Live Demo
 
-
+https://bakery-ecommerce-ui.onrender.com
 
 ---
 
