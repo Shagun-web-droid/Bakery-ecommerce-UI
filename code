@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RaTi's BaKeRy — Online Cakes</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --color: #941d57; --color-alpha: rgba(148,29,87,0.42); }
+
+    *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; }
+    html { font-size:62.5%; scroll-behavior:smooth; }
+    body{ background-image:url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0ABbTi9K1somzA_6DCUky9punS24K3lwbMA&s"); background-size: cover; }
+    .header{
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:2rem 6%; background:var(--color-alpha);
+      backdrop-filter: blur(4px);
+      box-shadow:0 0.5rem 1rem rgba(0,0,0,0.07);
+    }
+    .logo{ font-size:2.4rem; font-weight:700; color:#fff; text-decoration:none; display:flex; align-items:center; gap:.8rem; }
+    .logo .dot{ width:2.4rem; height:2.4rem; background:#fff; border-radius:50%; display:inline-block; }
+
+    .navbar{ display:flex; gap:2rem; align-items:center; }
+    .navbar a{ color:#fff; text-decoration:none; font-size:1.6rem; padding:.6rem 1rem; border-radius:.6rem; }
+    .navbar a:hover{ background:rgba(0,0,0,0.08); color:#fff; }
+
+    .icons{ display:flex; gap:1.2rem; align-items:center; color:#fff; }
+    .btn{ display:inline-block; padding:.8rem 2.4rem; background:var(--color); color:#fff; font-size:1.6rem; border-radius:.6rem; cursor:pointer; text-decoration:none; }
+
+    .hamburger{ display:none; flex-direction:column; cursor:pointer; gap:.4rem; }
+    .hamburger .line{ width:28px; height:3px; background:#fff; border-radius:2px; }
+
+
+    .slides-container{ max-width:1200px; margin:0 auto; padding:3rem; position:relative; }
+    .slide{ display:none; gap:2rem; align-items:center; }
+    .slide.active{ display:flex; }
+    .slide .content{ flex:1; }
+    .slide .content h1{ font-size:4.2rem; color: #0f0000; margin-bottom:1rem; }
+    .slide .content p{ font-size:1.6rem; margin-bottom:1.6rem; color:#0f0000; }
+    .slide .img{ flex:1; display:flex; justify-content:center; }
+    .slide .img img{ width:100%; max-width:420px; border-radius:1rem; box-shadow:0 .6rem 1.2rem rgba(0,0,0,0.08); }
+
+    .slide-controls{ position:absolute; top:50%; left:2rem; right:2rem; display:flex; justify-content:space-between; transform:translateY(-50%); gap:1rem; pointer-events:none; }
+    .slide-controls button{ pointer-events:auto; height:4.6rem; width:4.6rem; border-radius:50%; border:0; background:var(--color); color:#fff; cursor:pointer; box-shadow:0 .5rem 1rem rgba(0,0,0,0.12); }
+
+    .banner-container{ max-width:1200px; margin:3.2rem auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(28rem,1fr)); gap:1.2rem; padding:0 3rem; }
+    .banner{ position:relative; height:20rem; border-radius:1rem; overflow:hidden; box-shadow:0 .6rem 1.2rem rgba(0,0,0,0.08); }
+    .banner img{width:100%; height:100%; object-fit:cover; display:block; }
+    .banner .content{ position:absolute; left:2rem; top:50%; transform:translateY(-50%); color:#fff; }
+
+    .section{ padding:4rem 3rem; max-width:1200px; margin:0 auto; }
+    .title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; }
+    .title h2{ font-size:2.4rem; color:#0f0000; }
+    .products-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(22rem,1fr)); gap:1.2rem; }
+    .product{ background:#fff; border-radius:.8rem; padding:1.2rem; text-align:center; box-shadow:0 .6rem 1.2rem rgba(0,0,0,0.06); }
+    .product img{ width:100%; height:16rem; object-fit:cover; border-radius:.6rem; margin-bottom:1rem; }
+    .product h3{ font-size:1.8rem; margin-bottom:.6rem; color:#222; }
+    .price{ font-size:1.6rem; color:var(--color); font-weight:600; margin-bottom:1rem; }
+    .add{ background:var(--color); color:#fff; padding:.6rem 1.2rem; border-radius:.6rem; cursor:pointer; display:inline-block; }
+
+    .about{ display:flex; gap:2rem; align-items:center; flex-wrap:wrap; }
+    .about .text{ flex:1; }
+    .about .img{ flex:1; }
+    .about img{ width:100%; border-radius:.8rem; }
+
+    input[type="text"], input[type="email"], textarea{ width:100%; padding:1rem; margin-bottom:1rem; border-radius:.6rem; border:1px solid rgba(0,0,0,0.08); }
+    .contact-form{ max-width:800px; margin-top:1.2rem; }
+
+    .footer{ background:var(--color-alpha); padding:2.4rem 3rem; margin-top:3rem; color:#fff; text-align:center; }
+
+    @media (max-width:900px){
+      .navbar{ display:none; position:absolute; top:70px; left:0; right:0; flex-direction:column; gap:0; background:var(--color); padding:1.2rem; }
+      .navbar.active{ display:flex; }
+      .hamburger{ display:flex; }
+      .slides-container{ padding:1.2rem; }
+      .slide .content h1{ font-size:3.2rem; }
+      .about{ flex-direction:column; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <a class="logo" href="#"><span class="dot"></span>RaTi's BaKeRy (from RaTi's BaKeRy to your heart's plate)</a>
+    <nav class="navbar" id="navbar">
+      <a href="#home">Home</a>
+      <a href="#products">Cakes</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="btn" href="#order">Order Now</a>
+    </nav>
+
+    <div style="display:flex; align-items:center; gap:1.2rem;">
+      <div class="icons">🛒 👤</div>
+
+      <button id="hamburger" class="hamburger">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </button>
+    </div>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="slides-container">
+
+      <div class="slide active">
+        <div class="content">
+          <h1>Delicious cakes made with love</h1>
+          <p>Welcome to our family</p>
+          <p>Order freshly baked cakes for every celebration.</p>
+          <a class="btn" href="#products">Explore Cakes</a>
+        </div>
+        <div class="img">
+          <img src="https://images.pexels.com/photos/2531546/pexels-photo-2531546.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="content">
+          <h1>Customized cakes for every occasion</h1>
+          <p>Surprise your loved ones with us</p>
+          <p>Choose size, flavor, frosting and message.</p>
+          <a class="btn" href="#order">Customize</a>
+        </div>
+        <div class="img">
+          <img src="https://i.pinimg.com/736x/05/e1/e6/05e1e657764d106711727f72a9ec72f3.jpg" alt="">
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="content">
+          <h1>Seasonal specials & combo offers</h1>
+          <p>Hurry up!!! </p>
+          <p>Limited time offers on combo cakes + cupcakes.</p>
+          <a class="btn" href="#products">View Offers</a>
+        </div>
+        <div class="img">
+          <img src="https://i.pinimg.com/736x/11/de/82/11de827713d1292b607218a5b0781217.jpg" alt="">
+        </div>
+      </div>
+
+      <div class="slide-controls">
+        <button id="prev-slide">‹</button>
+        <button id="next-slide">›</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="banner-container">
+    <div class="banner">
+      <img src="https://images.jdmagicbox.com/quickquotes/images_main/strawberry-frosted-muffins-cake-aca6bzf2.jpg" alt="">
+      <div class="content"><span>Birthday Cakes</span><h3>make your bday special with us</h3></div>
+    </div>
+
+    <div class="banner">
+      <img src="https://i.pinimg.com/736x/9e/fe/49/9efe49aed38155e90c33f93b226dcdc3.jpg" alt="">
+      <div class="content"><span>Wedding Cakes</span><h3>Witnessing togetherness</h3></div>
+    </div>
+
+    <div class="banner">
+      <img src="https://api.floraindia.com/upload/43OxYoHgjV1735544569601.webp" alt="">
+      <div class="content"><span>Customized moments</span><h3>customized your moment with us , add bouguet and cards </h3></div>
+    </div>
+  </section>
+
+  <section id="products" class="section">
+    <div class="title">
+      <h2>Our Cakes</h2>
+      <h4>(LET'S have a BIG BITE)</h4>
+      <a class="btn" href="#order">Order now</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product">
+        <img src="https://img.freepik.com/free-photo/front-view-delicious-cake-concept_23-2148769292.jpg?semt=ais_hybrid&w=740&q=80" alt="">
+        <h3>Black Forest</h3>
+        <div class="price">₹ 799</div>
+        <a class="add" data-name="Black Forest" data-price="799">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://thumbs.dreamstime.com/b/luscious-dessert-red-velvet-cake-dark-background-ample-text-space-vertical-mobile-wallpaper-307775774.jpg" alt="">
+        <h3>Red Velvet</h3>
+        <div class="price">₹ 899</div>
+        <a class="add" data-name="Red Velvet" data-price="899">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQNjV82HZhP28-RP8pnPn0G_Ke5D7V7o9h2brU4W-igD3x_lECKL1B6ML7c4rJ9cU3Isicfy9G9RIh-p5mOwU0lHXEntpiJQ5EosEx5yC8" alt="">
+        <h3>Cheese Cake</h3>
+        <div class="price">₹ 699</div>
+        <a class="add" data-name="Cheese Cake" data-price="699">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://thebananadiaries.com/wp-content/uploads/2023/10/vegan-tiramisu-cake-recipe_7325-700x1050.jpg" alt="">
+        <h3>Tiramisu Cake</h3>
+        <div class="price">₹ 1199</div>
+        <a class="add" data-name="Tiramisu cake" data-price="1199">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://crumbsandcaramel.com/wp-content/uploads/2020/10/WS-Skull-Cake-Hero-Blog.jpg" alt="">
+        <h3>Chocolate Truffle</h3>
+        <div class="price">₹ 1099</div>
+        <a class="add" data-name="Chocolate Truffle" data-price="1099">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://i.pinimg.com/736x/96/45/92/96459252aac6a039f8cbee219036ad19.jpg" alt="">
+        <h3>Fruit Cake</h3>
+        <div class="price">₹ 699</div>
+        <a class="add" data-name="Fruit Cake" data-price="699">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://sahnibakery.com/cdn/shop/products/AppetizingButterscotchCake699@2x.jpg?v=1609333737" alt="">
+        <h3>Butterscotch Cake</h3>
+        <div class="price">₹ 559</div>
+        <a class="add" data-name="Butterscotch Cake" data-price="559">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://livforcake.com/wp-content/uploads/2017/06/vanilla-cake-4.jpg" alt="">
+        <h3>Vanilla Cake</h3>
+        <div class="price">₹ 599</div>
+        <a class="add" data-name="Vanilla Cake" data-price="599">Add to cart</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="section">
+    <div class="title">
+      <h2>Our Siders</h2>
+      <h4>(without SIDERS main course is boring)</h4>
+      <a class="btn" href="#order">Order now</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product">
+        <img src="https://www.amummytoo.co.uk/wp-content/uploads/2022/04/Pig-cupcakes-recipe-SQUARE.jpg" alt="">
+        <h3>Cuppy Cupcakes</h3>
+        <div class="price">₹ 39 each</div>
+        <a class="add" data-name="Cupcakes" data-price="39">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://myurbantreats.com/wp-content/uploads/2022/01/Donuts-with-chocolate-glaze-500x500.jpg" alt="">
+        <h3>Delicious Donuts</h3>
+        <div class="price">₹ 79 each</div>
+        <a class="add" data-name="Donuts" data-price="79">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://krbakes.com/cdn/shop/articles/Top_10_Trending_Pastry_Cakes_You_Need_to_Try.webp?v=1739364407&width=1920" alt="">
+        <h3>Perfect Pastries</h3>
+        <div class="price">₹ 59 each</div>
+        <a class="add" data-name="Pastries" data-price="59">Add to cart</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="section">
+    <div class="title">
+      <h2>Our Trendings</h2>
+      <h4>(why we would left from TRYing)</h4>
+      <a class="btn" href="#order">Order now</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product">
+        <img src="https://notoutofthebox.in/wp-content/uploads/2017/04/cs2.jpg" alt="">
+        <h3>Jar Cakes</h3>
+        <div class="price">₹ 199 each</div>
+        <a class="add" data-name="Jar Cake" data-price="199">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://whiteonwhite.co/sg/wp-content/uploads/2020/10/WAA8076-scaled.jpg" alt="">
+        <h3>Chocolate bouguet</h3>
+        <div class="price">₹ 999 each</div>
+        <a class="add" data-name="chocolates bouguet" data-price="999">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://tastesbetterfromscratch.com/wp-content/uploads/2017/11/Turtle-Cookies24-1.jpg" alt="">
+        <h3>Cookies</h3>
+        <div class="price">₹ 300 </div>
+        <a class="add" data-name="Cookies" data-price="300">Add to cart</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="section">
+    <div class="title">
+      <h2>Return gifts</h2>
+      <h4>(Make your Guest HAPPY with US)</h4>
+      <a class="btn" href="#order">Order now</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product">
+        <img src="https://a.storyblok.com/f/165154/1280x720/69ae2f469d/01_unique-birthday-gifts.jpg/m/" alt="">
+        <h3>For Birthday</h3>
+        <div class="price">₹ 79 each</div>
+        <a class="add" data-name="for bday" data-price="79">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://www.fluorescentstudios.in/cdn/shop/files/Neelkanth-min_1080x.png?v=1757775187" alt="">
+        <h3>For Wedding</h3>
+        <div class="price">₹ 199 each</div>
+        <a class="add" data-name="for wedding" data-price="199">Add to cart</a>
+      </div>
+
+      <div class="product">
+        <img src="https://www.theenglishhome.co.uk/_gatsby/file/7c9136bb9533895fc2814f6ec05d865d/COXCOX%20Satin%20Ribbon.jpg" alt="">
+        <h3>For Party </h3>
+        <div class="price">₹ 149/per </div>
+        <a class="add" data-name="for party" data-price="149">Add to cart</a>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="about" class="section">
+    <div class="title"><h2>About Us</h2></div>
+    <div class="about">
+      <div class="img"><img src="https://content.jdmagicbox.com/v2/comp/surat/f4/0261px261.x261.240220162513.f9f4/catalogue/bakers-bunch-city-light-town-surat-bakeries-8bhosb9ynm.jpg" alt=""></div>
+      <div class="text">
+        <p style="color:#0f0000;"><h2>RaTi's BaKeRy is a family of sweetness where everybite is crafted with love and baked with perfection . Celebrating you and your occassion like own . We are the daily dose of your sweetness .</h2></p>
+        <ul style="color:#0f0000; margin-top:1rem;">
+          <li>We have 3F's : Fresh Fluffy Fabulous</li>
+          <li>Made-to-order cakes and cupcakes</li>
+          <li>Fresh daily delivery</li>
+          <li>Custom designs & eggless options are also available</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section" style="padding-bottom:6rem;">
+    <div class="title"><h2>Contact & Order</h2></div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr)); gap:1.2rem; max-width:1200px; margin:0 auto;">
+      
+      <div>
+        <h3 style="font-size:1.8rem; margin-bottom:1rem;">Quick Order</h3>
+        <form id="order-form" class="contact-form">
+          <input type="text" id="name" placeholder="Your name" required>
+          <input type="email" id="email" placeholder="Email" required>
+          <input type="text" id="phone" placeholder="Phone" required>
+          <textarea id="message" placeholder="Order details"></textarea>
+          <button type="submit" class="btn">Submit Order</button>
+        </form>
+      </div>
+
+      <div>
+        <h3 style="font-size:1.8rem; margin-bottom:1rem;">Cart</h3>
+        <div id="cart" style="background:#fff; padding:1.2rem; border-radius:.8rem; box-shadow:0 .6rem 1.2rem rgba(0,0,0,0.06);">
+          <p id="cart-empty">Your cart is empty.</p>
+          <ul id="cart-items" style="list-style:none; margin-top:1rem;"></ul>
+          <div id="cart-total" style="margin-top:1rem; font-weight:700;"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p style="font-size:1.6rem;">© <span id="year"></span> RaTi's BaKeRy — where every bite feels special</p>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navbar = document.getElementById('navbar');
+
+    hamburger.addEventListener('click', ()=> navbar.classList.toggle('active'));
+    window.addEventListener('scroll', ()=> navbar.classList.remove('active'));
+
+    const slides = document.querySelectorAll('.slide');
+    const nextBtn = document.getElementById('next-slide');
+    const prevBtn = document.getElementById('prev-slide');
+    let index = 0;
+
+    function showSlide(i){
+      slides.forEach(s => s.classList.remove('active'));
+      index = (i + slides.length) % slides.length;
+      slides[index].classList.add('active');
+    }
+
+    let slideInterval = setInterval(()=> showSlide(index + 1), 5000);
+
+    nextBtn.onclick = ()=>{ showSlide(index + 1); resetInterval(); };
+    prevBtn.onclick = ()=>{ showSlide(index - 1); resetInterval(); };
+
+    function resetInterval(){
+      clearInterval(slideInterval);
+      slideInterval = setInterval(()=> showSlide(index + 1), 5000);
+    }
+
+    const cart = [];
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartEmptyEl = document.getElementById('cart-empty');
+    const cartTotalEl = document.getElementById('cart-total');
+
+    function renderCart(){
+      cartItemsEl.innerHTML = '';
+      if (cart.length === 0){
+        cartEmptyEl.style.display = 'block';
+        cartTotalEl.textContent = '';
+        return;
+      }
+      cartEmptyEl.style.display = 'none';
+      let total = 0;
+
+      cart.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '0.8rem';
+        li.innerHTML = `${item.name} — ₹${item.price} <button data-i="${i}" style="margin-left:1rem;padding:.3rem .6rem;border-radius:.4rem;border:0;background:#eee;cursor:pointer;">Remove</button>`;
+        cartItemsEl.appendChild(li);
+        total += Number(item.price);
+      });
+
+      cartTotalEl.textContent = 'Total: ₹' + total;
+
+      cartItemsEl.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', function(){
+          const i = Number(this.dataset.i);
+          cart.splice(i,1);
+          renderCart();
+        });
+      });
+    }
+
+    document.querySelectorAll('.add').forEach(btn => {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        const name = this.dataset.name;
+        const price = this.dataset.price;
+        cart.push({name, price});
+        renderCart();
+        document.getElementById('cart').scrollIntoView({behavior:'smooth'});
+      });
+    });
+
+    const orderForm = document.getElementById('order-form');
+    orderForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!name || !email){
+        alert('Please fill name and email.');
+        return;
+      }
+      if (cart.length === 0){
+        alert('Add at least one cake to cart.');
+        return;
+      }
+      alert('Thank you ' + name + '! Your order has been placed.');
+      cart.length = 0;
+      renderCart();
+      orderForm.reset();
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderCart();
+  </script>
+
+</body>
+</html>
