@@ -13,6 +13,7 @@ The project is designed with **scalable architecture** so it can later evolve in
 ---
 
 ## 🌐 Live Demo
+on render
 
 https://bakery-ecommerce-ui.onrender.com
 
